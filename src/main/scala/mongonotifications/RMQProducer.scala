@@ -9,7 +9,7 @@ import play.modules.reactivemongo.json.BSONFormats._
 /**
   * Created by amol on 8/1/16.
   */
-object SendNotification {
+object RMQProducer {
 
   val queueName = "mongo_notifications"
   var connection: Connection = null

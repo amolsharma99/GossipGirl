@@ -41,11 +41,11 @@ object TailedReader extends App {
     cursor.enumerate().apply(Iteratee.foreach { doc => {
       println(s"Document inserted: ${BSONDocument.pretty(doc)}")
       //Push this Doc to a Queue in RMQ
-      SendNotification.send(doc)
+      RMQProducer.send(doc)
     }})
 
     //Finally close open connections
-    SendNotification.end()
+    RMQProducer.end()
   }))
 
   def getConnection(): MongoConnection = {
