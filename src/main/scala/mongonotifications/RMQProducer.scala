@@ -30,8 +30,8 @@ object RMQProducer {
     val durable = true
     channel.queueDeclare(queueName, durable, false, false, null)
     val msg = Json.toJson(doc)
-//    channel.basicPublish("", queueName, null, doc.toString().getBytes())
-    println("Pushed to Queue " + queueName + " message: " + msg.toString())
+    channel.basicPublish("", queueName, null, msg.toString().getBytes())
+//    println("Pushed to Queue " + queueName + " message: " + msg.toString())
     channel.close()
   }
 

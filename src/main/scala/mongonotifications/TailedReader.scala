@@ -12,6 +12,8 @@ import reactivemongo.api.collections.bson.BSONCollection
 
 object TailedReader extends App {
 
+  RMQWorker.start()
+
   val connection = getConnection()
   val db = connection("local")
   val collection = db.collection[BSONCollection]("oplog.rs")
@@ -46,6 +48,7 @@ object TailedReader extends App {
 
     //Finally close open connections
     RMQProducer.end()
+    RMQWorker.end()
   }))
 
   def getConnection(): MongoConnection = {
