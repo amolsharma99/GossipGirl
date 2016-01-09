@@ -1,8 +1,7 @@
-mongo setup with replica set enabled, even single node replica setup will work for verification
-
-rabbitmq set up
-
-Java 7 should be running
+Dependencies -
+mongo setup with replica set enabled, even single node replica setup will work.
+rabbitmq 3.6
+Java 7
 
 
 jars/libraries used (versions mentioned in pom)
