@@ -1,5 +1,7 @@
 I divided the problem into two parts 
+   
     A. getting notifications from db on every change to my service.
+    
     B. filtering/processing and sending notification on relevant change. 
     
 Second part was straight forward, i am getting changes from somewhere as a stream, then i can filter them and
