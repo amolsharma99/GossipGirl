@@ -4,13 +4,13 @@ I divided the problem into two parts
     
     B. filtering/processing and sending notification on relevant change. 
     
-Second part was straight forward, i am getting changes from somewhere as a stream, then i can filter them and
+Second part was pretty straight forward, i am getting changes from somewhere as a stream, then i can filter them and
 send to the relevant clients.
 
 For first part, i was not sure what could be the best approach. i was expecting there was some provision in mongoDB
 which will let you subscribe to the changes happening in DB. In SQL systems people do the same thing with message brokers.
 
-Found that enterprise version supports auditing, but ofcourse for solving challenges we are not allowed to use 
+Found that enterprise version supports auditing, but obviously for solving challenges we are not allowed to use 
 enterprise/paid solutions so didn't try to explore it and moved on to look for alternative. 
 Ref - https://docs.mongodb.org/v3.0/core/auditing/
 
@@ -40,9 +40,7 @@ This is work based on oplog,
 2. A worker/consumer will be consuming in realtime from the above queue and process the received messages as described
 in the step below.
 
-3. Message received above will be validated if it of interest for any client, if yes then will be sent as per mechanism
-specified by the client.
+3. Message received above will be validated if it of interest for any client, Collection Level or field level both validations 
+can be done with the data we have. if yes then will be sent as per mechanism specified by the client.
 
-
-
-4...
+4. Writing API for subscription from client. Storing client preferences in DB. Sending processed message to clients (TODO, integrating spray.io with the app)
