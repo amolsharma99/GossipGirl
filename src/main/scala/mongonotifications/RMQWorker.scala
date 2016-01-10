@@ -1,45 +1,44 @@
 package mongonotifications
 
+import java.util.concurrent.{Executors, ExecutorService}
+
 import com.rabbitmq.client._
+import scala.collection.JavaConversions._
 
 /**
   * Created by amol on 9/1/16.
   */
 
-object RMQWorker {
+class RMQWorker extends Runnable{
 
-  val queueName = "mongo_notifications"
-  var connection: Connection = null
-
-  def init() = {
-    //UserName, Password, Ports can be maneged here.
-    val factory: ConnectionFactory = new ConnectionFactory()
-    factory.setHost("localhost")
-    connection = factory.newConnection()
-  }
-
-  def start() = {
-    val channel: Channel = connection.createChannel()
+  def run() = {
+    val channel: Channel = RMQConnectionFactory.getChannel()
     val durable = true
-    channel.queueDeclare(queueName, durable, false, false, null)
+    channel.queueDeclare(Constants.queueName, durable, false, false, null)
 
-    //Implemented consumer as callback in form of an object.
-    val consumer: Consumer = new DefaultConsumer(channel) {
-      @Override
-      def handleDelivery(consumerTag: String, envelope: Envelope, properties: AMQP.BasicProperties,
-                         body: Array[java.lang.Byte]) = {
-        val message: String =  new String(body, "UTF-8")
-        println(" [x] Received '" + message + "'")
-        //Process this and send to clients
+    val threadPool: ExecutorService = Executors.newCachedThreadPool()
+
+    val consumer: QueueingConsumer = new QueueingConsumer(channel)
+    //keeping auto-ack true by default
+    channel.basicConsume(Constants.queueName, true, consumer)
+
+    while(true){
+      val delivery = consumer.nextDelivery()
+      if(delivery != null){
+        val body = delivery.getBody
+
+        val runnable: Runnable = new Runnable {
+          override def run(): Unit = {
+            val message: String = new String(body, "UTF-8")
+            println(" [x] Received '" + message + "'")
+            SendNotification.processMessage(message)
+          }
+        }
+
+        //handle messages concurrently using threadpool
+        threadPool.submit(runnable)
       }
     }
-
-    channel.basicConsume(queueName, true, consumer);
-  }
-
-  def end() = {
-    if (connection != null)
-      connection.close()
   }
 
 }

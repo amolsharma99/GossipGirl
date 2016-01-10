@@ -1,10 +1,11 @@
 package mongonotifications
 
-import reactivemongo.api._
-import reactivemongo.bson._
 import play.api.libs.iteratee.Iteratee
-import scala.concurrent.ExecutionContext.Implicits.global
+import reactivemongo.api._
 import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.bson._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by amol on 8/1/16.
@@ -12,19 +13,18 @@ import reactivemongo.api.collections.bson.BSONCollection
 
 object TailedReader extends App {
 
-  RMQWorker.start()
+  //Start worker
+  new Thread(new RMQWorker).start()
 
-  val connection = getConnection()
-  val db = connection("local")
-  val collection = db.collection[BSONCollection]("oplog.rs")
+  val connection = MongoConnectionFactory.getConnection()
+  val db = connection(Constants.dbName)
+  val collection = db.collection[BSONCollection](Constants.oplogColl)
 
   //Fetch the most recent record in oplog.rs collection in local DB.
   val sortLogic = BSONDocument("ts" -> -1)
   val lastRecord = collection.find(BSONDocument()).sort(sortLogic).one[BSONDocument]
 
   lastRecord.map( optionDoc => optionDoc.map(doc => {
-    println(s"Last Document inserted: ${BSONDocument.pretty(doc)}")
-
     val lastTimestamp =  doc.get("ts") match {
       case Some(y) =>  y.asInstanceOf[BSONTimestamp]
       case None => new BSONTimestamp(0)
@@ -41,20 +41,10 @@ object TailedReader extends App {
     println("== open tailable cursor==")
 
     cursor.enumerate().apply(Iteratee.foreach { doc => {
-      println(s"Document inserted: ${BSONDocument.pretty(doc)}")
+      println(s"New Document in oplog.rs: ${BSONDocument.pretty(doc)}")
       //Push this Doc to a Queue in RMQ
       RMQProducer.send(doc)
     }})
-
-    //Finally close open connections
-    RMQProducer.end()
-    RMQWorker.end()
   }))
-
-  def getConnection(): MongoConnection = {
-    val driver = new MongoDriver
-    val mongoUrl = "localhost"
-    return driver.connection(List(mongoUrl))
-  }
 
 }
