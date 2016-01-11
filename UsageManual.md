@@ -56,16 +56,11 @@ Steps to be followed on a debian linux machines -
         mvn package 
         ##execute jar
         java -jar target/SocialCops-1.0-SNAPSHOT.jar 
-        
-        
-
-        
-
-
-
-
 
 jars/libraries used (versions mentioned in pom)
+
 scala version 2.11.6 (handled in pom)
+
 play 2.3.x (handled in pom)
+
 reactivemongo scala mongo driver
