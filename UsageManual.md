@@ -52,6 +52,13 @@ Steps to be followed on a debian linux machines -
 
         cd $PROJECT_DIR
         mvn clean install
+        ##created shaded uber jar
+        mvn package 
+        ##execute jar
+        java -jar target/SocialCops-1.0-SNAPSHOT.jar 
+        
+        
+
         
 
 
