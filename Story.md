@@ -43,4 +43,4 @@ in the step below.
 3. Message received above will be validated if it of interest for any client, Collection Level or field level both validations 
 can be done with the data we have. if yes then will be sent as per mechanism specified by the client.
 
-4. Writing API for subscription from client. Storing client preferences in DB. Sending processed message to clients (TODO, integrating spray.io with the app)
+4. Writing API for subscription from client. Storing client preferences in DB. Sending processed message to clients (TODO: integrating spray.io with the app)
