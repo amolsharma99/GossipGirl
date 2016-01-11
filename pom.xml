@@ -14,6 +14,11 @@
       <name>Scala-Tools Maven2 Repository</name>
       <url>http://scala-tools.org/repo-releases</url>
     </repository>
+    <repository>
+      <id>typesafe-releases</id>
+      <name>Typesafe Repository</name>
+      <url>http://repo.typesafe.com/typesafe/releases/</url>
+    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -48,7 +53,6 @@
           <artifactId>play_2.11</artifactId>
           <version>2.3.9</version>
       </dependency>
-
 
       <dependency>
         <groupId>org.reactivemongo</groupId>
