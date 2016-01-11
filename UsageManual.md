@@ -6,25 +6,33 @@ Java 7
 Steps to be followed on a debian linux machines -
 
 1. Install Java 7 -
+
         sudo add-apt-repository ppa:webupd8team/java
         sudo apt-get update && sudo apt-get install oracle-jdk7-installer
         
 2. Install maven -
+
         sudo apt-get install maven
 
 3. Install git -
+ 
+
         sudo apt-get install git
 
 4. Install scala
+
         sudo apt-get install scala
 
 5. Install RabbitMq
+
         https://www.rabbitmq.com/install-debian.html
         
 6. Install MongoDB
+
         https://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/        
 
 7. Enable Replica setup
+
         #stop running instance
         sudo service mongod stop
         #start new instance with --replSet
@@ -37,9 +45,11 @@ Steps to be followed on a debian linux machines -
         #you can now start doing operations in mongo and should see oplog getting populated.
 
 8. Clone project in local dir 
+
         git clone https://github.com/amolsharma99/GossipGirl.git
 
 9. Build & Run Project 
+
         cd $PROJECT_DIR
         mvn clean install
         
